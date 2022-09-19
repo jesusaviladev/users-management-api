@@ -1,15 +1,23 @@
 /* Express app */
 import express from 'express';
 
+/* Routes */
+import usersRouter from '../routes/users.routes.js';
+
 const app = express();
 
 // handle routes, middlewares...
 
 app.get('/', (req, res) => {
-	console.log(req.ip);
-	return res.status(200).send('Hello world');
+	return res.status(200).json({
+		message: 'Users API',
+	});
 });
 
-// export app only for testing
+app.use(express.json());
+
+app.use('/api/users', usersRouter);
+
+// export app only, for testing
 
 export default app;
