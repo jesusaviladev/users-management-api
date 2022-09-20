@@ -1,47 +1,39 @@
 import { Router } from 'express';
 
+import validateUserRegister from '../dto/users-register.dto.js';
+import validateUserLogin from '../dto/users-login.dto.js';
+import validateUserData from '../dto/users-data.dto.js';
+import validateUserPassword from '../dto/users-password.dto.js';
+import validateUserEmail from '../dto/users-email.dto.js';
+import validateUserUnregister from '../dto/users-unregister.dto.js';
+
+import {
+	getUsers,
+	getUserData,
+	createUser,
+	logUser,
+	editUser,
+	resetUserPassword,
+	resetUserEmail,
+	deleteUser,
+} from '../controllers/users.controller.js';
+
 const usersRouter = Router();
 
-usersRouter.get('/profile', (req, res) => {
-	res.status(200).json({
-		message: 'get success :)',
-	});
-});
+usersRouter.get('/', getUsers);
 
-usersRouter.post('/register', (req, res) => {
-	res.status(201).json({
-		message: 'created',
-	});
-});
+usersRouter.get('/profile', getUserData);
 
-usersRouter.post('/login', (req, res) => {
-	res.status(200).json({
-		message: 'login',
-	});
-});
+usersRouter.post('/register', validateUserRegister, createUser);
 
-usersRouter.patch('/:id', (req, res) => {
-	res.status(200).json({
-		message: 'patch success',
-	});
-});
+usersRouter.post('/login', validateUserLogin, logUser);
 
-usersRouter.patch('/reset-password', (req, res) => {
-	res.status(200).json({
-		message: 'patch success',
-	});
-});
+usersRouter.patch('/', validateUserData, editUser);
 
-usersRouter.patch('/update-email', (req, res) => {
-	res.status(200).json({
-		message: 'patch success',
-	});
-});
+usersRouter.patch('/reset-password', validateUserPassword, resetUserPassword);
 
-usersRouter.delete('/:id', (req, res) => {
-	res.status(200).json({
-		message: 'delete success',
-	});
-});
+usersRouter.patch('/update-email', validateUserEmail, resetUserEmail);
+
+usersRouter.delete('/:id', validateUserUnregister, deleteUser);
 
 export default usersRouter;
