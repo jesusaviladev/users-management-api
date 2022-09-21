@@ -6,9 +6,17 @@ import { passwordDTOSchema } from '../lib/dto-types.js';
 
 // Creamos el esquema
 
-const UnregisterUserDTOSchema = Type.Object({
-	password: passwordDTOSchema,
-});
+const UnregisterUserDTOSchema = Type.Object(
+	{
+		password: passwordDTOSchema,
+	},
+	{
+		additionalProperties: false,
+		errorMessage: {
+			additionalProperties: 'El formato del objeto no es válido',
+		},
+	}
+);
 
 // Agregamos formatos para validaciones
 

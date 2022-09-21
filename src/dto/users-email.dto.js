@@ -7,10 +7,18 @@ import { emailDTOSchema, passwordDTOSchema } from '../lib/dto-types.js';
 
 // Creamos el esquema
 
-const UpdateEmailDTOSchema = Type.Object({
-	email: emailDTOSchema,
-	password: passwordDTOSchema,
-});
+const UpdateEmailDTOSchema = Type.Object(
+	{
+		email: emailDTOSchema,
+		password: passwordDTOSchema,
+	},
+	{
+		additionalProperties: false,
+		errorMessage: {
+			additionalProperties: 'El formato del objeto no es válido',
+		},
+	}
+);
 
 // Agregamos formatos para validaciones
 

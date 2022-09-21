@@ -7,6 +7,8 @@ import validateUserPassword from '../dto/users-password.dto.js';
 import validateUserEmail from '../dto/users-email.dto.js';
 import validateUserUnregister from '../dto/users-unregister.dto.js';
 
+import validateAuth from '../lib/auth-middleware.js';
+
 import {
 	getUsers,
 	getUserData,
@@ -22,18 +24,28 @@ const usersRouter = Router();
 
 usersRouter.get('/', getUsers);
 
-usersRouter.get('/profile', getUserData);
-
 usersRouter.post('/register', validateUserRegister, createUser);
 
 usersRouter.post('/login', validateUserLogin, logUser);
 
-usersRouter.patch('/', validateUserData, editUser);
+usersRouter.get('/profile', validateAuth, getUserData);
 
-usersRouter.patch('/reset-password', validateUserPassword, resetUserPassword);
+usersRouter.patch('/', validateAuth, validateUserData, editUser);
 
-usersRouter.patch('/update-email', validateUserEmail, resetUserEmail);
+usersRouter.patch(
+	'/reset-password',
+	validateAuth,
+	validateUserPassword,
+	resetUserPassword
+);
 
-usersRouter.delete('/:id', validateUserUnregister, deleteUser);
+usersRouter.patch(
+	'/update-email',
+	validateAuth,
+	validateUserEmail,
+	resetUserEmail
+);
+
+usersRouter.delete('/', validateAuth, validateUserUnregister, deleteUser);
 
 export default usersRouter;

@@ -6,10 +6,18 @@ import { nameDTOSchema, surnameDTOSchema } from '../lib/dto-types.js';
 
 // Creamos el esquema
 
-const UserDataDTOSchema = Type.Object({
-	name: nameDTOSchema,
-	surname: surnameDTOSchema,
-});
+const UserDataDTOSchema = Type.Object(
+	{
+		name: nameDTOSchema,
+		surname: surnameDTOSchema,
+	},
+	{
+		additionalProperties: false,
+		errorMessage: {
+			additionalProperties: 'El formato del objeto no es válido',
+		},
+	}
+);
 
 // Agregamos formatos para validaciones
 

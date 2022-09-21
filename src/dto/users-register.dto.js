@@ -13,13 +13,21 @@ import {
 
 // Creamos el esquema
 
-const RegisterDTOSchema = Type.Object({
-	_id: idDTOSchema,
-	name: nameDTOSchema,
-	surname: surnameDTOSchema,
-	email: emailDTOSchema,
-	password: passwordDTOSchema,
-});
+const RegisterDTOSchema = Type.Object(
+	{
+		_id: idDTOSchema,
+		name: nameDTOSchema,
+		surname: surnameDTOSchema,
+		email: emailDTOSchema,
+		password: passwordDTOSchema,
+	},
+	{
+		additionalProperties: false,
+		errorMessage: {
+			additionalProperties: 'El formato del objeto no es válido',
+		},
+	}
+);
 
 // Agregamos formatos para validaciones
 

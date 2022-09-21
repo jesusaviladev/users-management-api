@@ -6,10 +6,18 @@ import { passwordDTOSchema } from '../lib/dto-types.js';
 
 // Creamos el esquema
 
-const UpdatePasswordDTOSchema = Type.Object({
-	oldPassword: passwordDTOSchema,
-	newPassword: passwordDTOSchema,
-});
+const UpdatePasswordDTOSchema = Type.Object(
+	{
+		oldPassword: passwordDTOSchema,
+		newPassword: passwordDTOSchema,
+	},
+	{
+		additionalProperties: false,
+		errorMessage: {
+			additionalProperties: 'El formato del objeto no es válido',
+		},
+	}
+);
 
 // Agregamos formatos para validaciones
 

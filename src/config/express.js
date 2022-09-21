@@ -24,7 +24,7 @@ app.use('/', (req, res, next) =>
 app.use('/', (error, req, res, next) => {
 	console.log(error);
 
-	return res.status(500).json({ message: 'Error' });
+	return res.status(500).json({ message: 'Internal Server Error' });
 });
 
 // export app only, for testing
