@@ -9,7 +9,7 @@ import {
 	surnameDTOSchema,
 	emailDTOSchema,
 	passwordDTOSchema,
-} from '../lib/dto-types.js';
+} from './dto-types.js';
 
 // Creamos el esquema
 
