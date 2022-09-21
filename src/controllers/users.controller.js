@@ -114,26 +114,127 @@ export const getUserData = async (req, res, next) => {
 	}
 };
 
-export const editUser = (req, res) => {
-	return res.status(200).json({
-		message: 'patch success',
-	});
+export const editUser = async (req, res, next) => {
+	const { userId } = req;
+
+	const { name, surname } = req.body;
+
+	try {
+		const user = await User.findById(userId);
+
+		if (!user)
+			return res.status(401).json({
+				error: 'Invalid user',
+			});
+
+		user.name = name;
+		user.surname = surname;
+
+		await user.save();
+
+		return res.status(200).json({
+			message: 'Usuario actualizado',
+		});
+	} catch (error) {
+		next(error);
+	}
 };
 
-export const resetUserPassword = (req, res) => {
-	return res.status(200).json({
-		message: 'patch success',
-	});
+export const resetUserPassword = async (req, res, next) => {
+	const { userId } = req;
+
+	const { oldPassword, newPassword } = req.body;
+
+	try {
+		const user = await User.findById(userId);
+
+		if (!user)
+			return res.status(401).json({
+				error: 'Invalid user',
+			});
+
+		const isPasswordValid = await bcrypt.compare(
+			oldPassword,
+			user.password
+		);
+
+		if (!isPasswordValid)
+			return res.status(401).json({
+				error: 'Invalid user credentials',
+			});
+
+		const newHashedPassword = await bcrypt.hash(newPassword, 10);
+
+		user.password = newHashedPassword;
+
+		await user.save();
+
+		return res.status(200).json({
+			message: 'Contraseña actualizada',
+		});
+	} catch (error) {
+		next(error);
+	}
 };
 
-export const resetUserEmail = (req, res) => {
-	return res.status(200).json({
-		message: 'patch success',
-	});
+export const resetUserEmail = async (req, res, next) => {
+	const { userId } = req;
+
+	const { email, password } = req.body;
+
+	try {
+		const user = await User.findById(userId);
+
+		if (!user)
+			return res.status(401).json({
+				error: 'Invalid user',
+			});
+
+		const isPasswordValid = await bcrypt.compare(password, user.password);
+
+		if (!isPasswordValid)
+			return res.status(401).json({
+				error: 'Invalid user credentials',
+			});
+
+		user.email = email;
+
+		await user.save();
+
+		return res.status(200).json({
+			message: 'Email del usuario actualizado',
+		});
+	} catch (error) {
+		next(error);
+	}
 };
 
-export const deleteUser = (req, res) => {
-	return res.status(200).json({
-		message: 'delete success',
-	});
+export const deleteUser = async (req, res, next) => {
+	const { userId } = req;
+
+	const { password } = req.body;
+
+	try {
+		const user = await User.findById(userId);
+
+		if (!user)
+			return res.status(404).json({
+				error: 'Invalid user',
+			});
+
+		const isPasswordValid = await bcrypt.compare(password, user.password);
+
+		if (!isPasswordValid)
+			return res.status(401).json({
+				error: 'Usuario no autorizado',
+			});
+
+		await User.deleteOne();
+
+		return res.status(204).json({
+			message: 'Usuario eliminado',
+		});
+	} catch (error) {
+		next(error);
+	}
 };
