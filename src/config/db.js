@@ -2,7 +2,9 @@ import mongoose from 'mongoose';
 
 const connectDatabase = async (url) => {
 	return mongoose
-		.connect(url)
+		.connect(url, {
+			dbName: 'users-management-api',
+		})
 		.then(() => {
 			console.log('Database connected');
 		})

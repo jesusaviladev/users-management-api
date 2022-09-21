@@ -2,7 +2,7 @@ import User from '../models/user.models.js';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 
-export const createUser = async (req, res) => {
+export const createUser = async (req, res, next) => {
 	const { _id, name, surname, email, password } = req.body;
 
 	try {
@@ -18,7 +18,7 @@ export const createUser = async (req, res) => {
 
 		if (existingUserEmail) {
 			return res.status(409).json({
-				error: 'Este email ya se encuentra registrado',
+				error: 'El email ya se encuentra registrado',
 			});
 		}
 
@@ -69,7 +69,9 @@ export const logUser = async (req, res, next) => {
 			id: userInDB._id,
 		};
 
-		const signedToken = jwt.sign(payload, process.env.JWT_SECRET_KEY);
+		const signedToken = jwt.sign(payload, process.env.JWT_SECRET_KEY, {
+			expiresIn: '7d',
+		});
 
 		return res.status(200).json({
 			token: signedToken,
@@ -80,15 +82,36 @@ export const logUser = async (req, res, next) => {
 };
 
 export const getUsers = async (req, res, next) => {
-	const users = await User.find();
-
-	return res.status(200).json(users);
+	try {
+		const users = await User.find();
+		return res.status(200).json(users);
+	} catch (error) {
+		next(error);
+	}
 };
 
-export const getUserData = (req, res) => {
-	return res.status(200).json({
-		message: 'get success',
-	});
+export const getUserData = async (req, res, next) => {
+	const { userId } = req;
+
+	try {
+		const user = await User.findById(userId);
+
+		if (!user)
+			return res.status(401).json({
+				error: 'Unauthorized',
+			});
+
+		const { _id, name, surname, email } = user;
+
+		return res.status(200).json({
+			_id,
+			name,
+			surname,
+			email,
+		});
+	} catch (error) {
+		next(error);
+	}
 };
 
 export const editUser = (req, res) => {
